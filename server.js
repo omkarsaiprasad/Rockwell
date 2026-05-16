@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const shopifyRoutes = require('./routes/shopify');
+const jokesRoutes = require('./routes/jokes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,21 +25,34 @@ app.get('/health', (req, res) => {
 
 // API Routes
 app.use('/api/shopify', shopifyRoutes);
+app.use('/api/jokes', jokesRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
-    name: 'Rockwell - Shopify App',
+    name: 'Rockwell - Shopify App + Joke Generator',
     version: '1.0.0',
     status: 'running',
     endpoints: {
       health: '/health',
-      shop: '/api/shopify/shop',
-      products: '/api/shopify/products',
-      orders: '/api/shopify/orders',
-      customers: '/api/shopify/customers',
+      shopify: {
+        shop: '/api/shopify/shop',
+        products: '/api/shopify/products',
+        orders: '/api/shopify/orders',
+        customers: '/api/shopify/customers',
+      },
+      jokes: {
+        random: '/api/jokes/random',
+        programming: '/api/jokes/programming',
+        knockKnock: '/api/jokes/knock-knock',
+        general: '/api/jokes/general',
+        ten: '/api/jokes/ten',
+      },
+      docs: {
+        shopify: '/api/shopify/docs',
+        jokes: '/api/jokes/docs',
+      },
     },
-    docs: '/api/shopify/docs',
   });
 });
 
@@ -63,9 +77,9 @@ app.use((err, req, res, next) => {
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`🚀 Rockwell Shopify App running on http://localhost:${PORT}`);
-  console.log(`📊 Shop endpoint: http://localhost:${PORT}/api/shopify/shop`);
-  console.log(`📦 Products endpoint: http://localhost:${PORT}/api/shopify/products`);
+  console.log(`🚀 Rockwell App running on http://localhost:${PORT}`);
+  console.log(`📊 Shopify endpoint: http://localhost:${PORT}/api/shopify/shop`);
+  console.log(`😂 Jokes endpoint: http://localhost:${PORT}/api/jokes/random`);
 });
 
 module.exports = app;

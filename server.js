@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Rockwell Shopify App is running' });
+  res.json({ status: 'OK', message: 'Rockwell App is running' });
 });
 
 // API Routes
@@ -30,27 +30,31 @@ app.use('/api/jokes', jokesRoutes);
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
-    name: 'Rockwell - Shopify App + Joke Generator',
+    name: 'Rockwell - Multi-Feature App',
     version: '1.0.0',
     status: 'running',
-    endpoints: {
-      health: '/health',
+    features: {
       shopify: {
-        shop: '/api/shopify/shop',
-        products: '/api/shopify/products',
-        orders: '/api/shopify/orders',
-        customers: '/api/shopify/customers',
+        description: 'Shopify e-commerce integration',
+        endpoints: {
+          shop: '/api/shopify/shop',
+          products: '/api/shopify/products',
+          orders: '/api/shopify/orders',
+          customers: '/api/shopify/customers',
+          docs: '/api/shopify/docs',
+        },
       },
       jokes: {
-        random: '/api/jokes/random',
-        programming: '/api/jokes/programming',
-        knockKnock: '/api/jokes/knock-knock',
-        general: '/api/jokes/general',
-        ten: '/api/jokes/ten',
-      },
-      docs: {
-        shopify: '/api/shopify/docs',
-        jokes: '/api/jokes/docs',
+        description: 'Random joke generator',
+        endpoints: {
+          random: '/api/jokes/random',
+          programming: '/api/jokes/programming',
+          knockKnock: '/api/jokes/knock-knock',
+          general: '/api/jokes/general',
+          category: '/api/jokes/category/:category',
+          ten: '/api/jokes/ten',
+          docs: '/api/jokes/docs',
+        },
       },
     },
   });
@@ -62,6 +66,10 @@ app.use((req, res) => {
     success: false,
     message: 'Endpoint not found',
     path: req.path,
+    availableEndpoints: {
+      shopify: '/api/shopify/docs',
+      jokes: '/api/jokes/docs',
+    },
   });
 });
 
@@ -78,8 +86,10 @@ app.use((err, req, res, next) => {
 // Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Rockwell App running on http://localhost:${PORT}`);
-  console.log(`📊 Shopify endpoint: http://localhost:${PORT}/api/shopify/shop`);
-  console.log(`😂 Jokes endpoint: http://localhost:${PORT}/api/jokes/random`);
+  console.log(`\n📚 Available Features:`);
+  console.log(`   🛍️  Shopify Integration: http://localhost:${PORT}/api/shopify/docs`);
+  console.log(`   😂 Joke Generator: http://localhost:${PORT}/api/jokes/docs`);
+  console.log(`\n📖 Full API: http://localhost:${PORT}`);
 });
 
 module.exports = app;
